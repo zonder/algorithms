@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Week1
+namespace quick_union
 {
   class Program
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello World1!");
-      Console.ReadLine();
+      Console.WriteLine("Hello World!");
     }
   }
 }
