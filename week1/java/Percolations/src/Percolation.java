@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 /******************************************************************************
  *  Compilation:  javac-algs4 Percolation.java
  *  Execution:    java-algs4 Percolation n
@@ -6,13 +8,15 @@
  ******************************************************************************/
 
 public class Percolation {
+  private WeightedQuickUnionUF _weightedQuickUnionUF;
+
   /**
    * create n-by-n grid, with all sites blocked
    *
    * @param n - size of grid
    */
   public Percolation(int n) {
-
+    _weightedQuickUnionUF = new WeightedQuickUnionUF(n);
   }
 
   /**
@@ -22,7 +26,11 @@ public class Percolation {
    * @param col - col index of site
    */
   public void open(int row, int col) {
+    int p = row - 1;
+    int q = col - 1;
 
+    if (p > 0)
+      _weightedQuickUnionUF.union();
   }
 
   /**
