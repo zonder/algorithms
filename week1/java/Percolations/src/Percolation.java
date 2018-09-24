@@ -1,5 +1,7 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.Random;
+
 /******************************************************************************
  *  Compilation:  javac-algs4 Percolation.java
  *  Execution:    java-algs4 Percolation n
@@ -9,6 +11,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
   private WeightedQuickUnionUF _weightedQuickUnionUF;
+  private int _n;
+  private int _openCount = 0;
+
+  private boolean[] _states;
 
   /**
    * create n-by-n grid, with all sites blocked
@@ -16,7 +22,12 @@ public class Percolation {
    * @param n - size of grid
    */
   public Percolation(int n) {
-    _weightedQuickUnionUF = new WeightedQuickUnionUF(n);
+    if (n <= 0)
+      throw new java.lang.IllegalArgumentException();
+
+    _weightedQuickUnionUF = new WeightedQuickUnionUF(n * n);
+    _n = n;
+    _states = new boolean[n * n];
   }
 
   /**
@@ -26,11 +37,34 @@ public class Percolation {
    * @param col - col index of site
    */
   public void open(int row, int col) {
-    int p = row - 1;
-    int q = col - 1;
+    var rowIndex = row - 1;
+    var colIndex = col - 1;
 
-    if (p > 0)
-      _weightedQuickUnionUF.union();
+    int p = (_n * rowIndex) + colIndex;
+    if (p < 0)
+      return;
+
+    if (row > 1 && isOpen(row - 1, col)) {
+      int q = (_n * (rowIndex - 1)) + colIndex;
+      _weightedQuickUnionUF.union(p, q);
+    }
+    if (row < _n && isOpen(row + 1, col)) {
+      int q = (_n * (rowIndex + 1)) + colIndex;
+      _weightedQuickUnionUF.union(p, q);
+    }
+
+    if (col > 1 && isOpen(row, col - 1)) {
+      int q = (_n * rowIndex) + (colIndex - 1);
+      _weightedQuickUnionUF.union(p, q);
+    }
+
+    if (col < _n && isOpen(row, col + 1)) {
+      int q = (_n * rowIndex) + (colIndex + 1);
+      _weightedQuickUnionUF.union(p, q);
+    }
+
+    _states[p] = true;
+    _openCount++;
   }
 
   /**
@@ -41,7 +75,10 @@ public class Percolation {
    * @return site openness
    */
   public boolean isOpen(int row, int col) {
-    return false;
+    int p = (_n * (row - 1)) + (col - 1);
+    if (p < 0)
+      return false;
+    return _states[p];
   }
 
   /**
@@ -52,6 +89,11 @@ public class Percolation {
    * @return site fullness
    */
   public boolean isFull(int row, int col) {
+    int p = (_n * (row - 1)) + (col - 1);
+    for (int i = 0; i < _n; i++) {
+      if (_weightedQuickUnionUF.connected(p, i))
+        return true;
+    }
     return false;
   }
 
@@ -61,7 +103,7 @@ public class Percolation {
    * @return number of open sites
    */
   public int numberOfOpenSites() {
-    return 0;
+    return _openCount;
   }
 
   /**
@@ -70,10 +112,33 @@ public class Percolation {
    * @return percolates or not
    */
   public boolean percolates() {
+    for (int i = 0; i < _n; i++) {
+      for (int j = 0; j < _n; j++)
+        if (_weightedQuickUnionUF.connected((_n * _n) - j - 1, i))
+          return true;
+    }
     return false;
   }
 
   public static void main(String[] args) {
-    System.out.print("Percolation");
+    int n = 20;
+    var percolation = new Percolation(n);
+    var random = new Random();
+    boolean isPercolated = false;
+    int counter = 0;
+    do {
+
+      var row = random.nextInt(n) + 1;
+      var column = random.nextInt(n) + 1;
+      if (!percolation.isOpen(row, column)) {
+        percolation.open(row, column);
+        if (percolation.percolates())
+          isPercolated = true;
+
+        counter++;
+      }
+
+    } while (!isPercolated);
+    System.out.println(counter + "/" + n * n);
   }
 }
