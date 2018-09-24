@@ -1,6 +1,5 @@
 import edu.princeton.cs.algs4.QuickFindUF;
-
-import java.util.Random;
+import edu.princeton.cs.algs4.StdRandom;
 
 /******************************************************************************
  *  Compilation:  javac-algs4 Percolation.java
@@ -123,13 +122,12 @@ public class Percolation {
   public static void main(String[] args) {
     int n = 20;
     var percolation = new Percolation(n);
-    var random = new Random();
     boolean isPercolated = false;
     int counter = 0;
     do {
 
-      var row = random.nextInt(n) + 1;
-      var column = random.nextInt(n) + 1;
+      var row = StdRandom.uniform(1, n + 1);
+      var column = StdRandom.uniform(1, n + 1);
       if (!percolation.isOpen(row, column)) {
         percolation.open(row, column);
         if (percolation.percolates())

@@ -1,6 +1,5 @@
+import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-
-import java.util.Random;
 
 /******************************************************************************
  *  Compilation:  javac-algs4 Percolation.java
@@ -32,13 +31,12 @@ public class PercolationStats {
 
     for (int i = 0; i < trials; i++) {
       var percolation = new Percolation(n);
-      var random = new Random();
       boolean isPercolated = false;
       int counter = 0;
       do {
 
-        var row = random.nextInt(n) + 1;
-        var column = random.nextInt(n) + 1;
+        var row = StdRandom.uniform(1, n + 1);
+        var column = StdRandom.uniform(1, n + 1);
         if (!percolation.isOpen(row, column)) {
           percolation.open(row, column);
           if (percolation.percolates())
@@ -98,7 +96,5 @@ public class PercolationStats {
     System.out.println("mean                    = " + stats.mean());
     System.out.println("stddev                  = " + stats.stddev());
     System.out.println("95% confidence interval = [" + stats.confidenceLo() + "," + stats.confidenceHi() + "]");
-    // StdRandom
-    //  StdStats
   }
 }
