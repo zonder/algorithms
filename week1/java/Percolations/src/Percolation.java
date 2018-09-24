@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.QuickFindUF;
 
 import java.util.Random;
 
@@ -10,7 +10,7 @@ import java.util.Random;
  ******************************************************************************/
 
 public class Percolation {
-  private WeightedQuickUnionUF _weightedQuickUnionUF;
+  private QuickFindUF _unionFindAlgorithm;
   private int _n;
   private int _openCount = 0;
 
@@ -25,7 +25,7 @@ public class Percolation {
     if (n <= 0)
       throw new java.lang.IllegalArgumentException();
 
-    _weightedQuickUnionUF = new WeightedQuickUnionUF(n * n);
+    _unionFindAlgorithm = new QuickFindUF(n * n);
     _n = n;
     _states = new boolean[n * n];
   }
@@ -46,21 +46,21 @@ public class Percolation {
 
     if (row > 1 && isOpen(row - 1, col)) {
       int q = (_n * (rowIndex - 1)) + colIndex;
-      _weightedQuickUnionUF.union(p, q);
+      _unionFindAlgorithm.union(p, q);
     }
     if (row < _n && isOpen(row + 1, col)) {
       int q = (_n * (rowIndex + 1)) + colIndex;
-      _weightedQuickUnionUF.union(p, q);
+      _unionFindAlgorithm.union(p, q);
     }
 
     if (col > 1 && isOpen(row, col - 1)) {
       int q = (_n * rowIndex) + (colIndex - 1);
-      _weightedQuickUnionUF.union(p, q);
+      _unionFindAlgorithm.union(p, q);
     }
 
     if (col < _n && isOpen(row, col + 1)) {
       int q = (_n * rowIndex) + (colIndex + 1);
-      _weightedQuickUnionUF.union(p, q);
+      _unionFindAlgorithm.union(p, q);
     }
 
     _states[p] = true;
@@ -91,7 +91,7 @@ public class Percolation {
   public boolean isFull(int row, int col) {
     int p = (_n * (row - 1)) + (col - 1);
     for (int i = 0; i < _n; i++) {
-      if (_weightedQuickUnionUF.connected(p, i))
+      if (_unionFindAlgorithm.connected(p, i))
         return true;
     }
     return false;
@@ -114,7 +114,7 @@ public class Percolation {
   public boolean percolates() {
     for (int i = 0; i < _n; i++) {
       for (int j = 0; j < _n; j++)
-        if (_weightedQuickUnionUF.connected((_n * _n) - j - 1, i))
+        if (_unionFindAlgorithm.connected((_n * _n) - j - 1, i))
           return true;
     }
     return false;
