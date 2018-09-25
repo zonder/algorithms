@@ -1,18 +1,26 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-/******************************************************************************
- * Compilation: javac-algs4 Percolation.java Execution: java-algs4 Percolation n
+/* *****************************************************************************
+ *  Name:    Alexander Masalov
+ *  Description:  Program that calculates percolation threshold via Monte Carlo simulation.
  *
+ *  Written:       09/23/2018
+ *  Last updated:  09/25/2018
  *
- ******************************************************************************/
+ *  % javac-algs4 Percolation.java
+ *  % java-algs4 Percolation
+ *  226/400
+ *
+ **************************************************************************** */
+
 
 public class Percolation {
-    private WeightedQuickUnionUF _unionFindAlgorithm;
-    private int _n;
-    private int _openCount = 0;
+    private WeightedQuickUnionUF _unionFindAlgorithm; // Algorithm to perform quick union and find
 
-    private boolean[] _states;
+    private int _n; // Size of grid
+    private int _openCount = 0; // count of open sites
+    private boolean[] _states; // states of sites
 
     /**
      * create n-by-n grid, with all sites blocked
@@ -35,12 +43,13 @@ public class Percolation {
      * @param col - col index of site
      */
     public void open(int row, int col) {
+        if (row <= 0 || col <= 0)
+            throw new java.lang.IllegalArgumentException();
+
         int rowIndex = row - 1;
         int colIndex = col - 1;
 
         int p = (_n * rowIndex) + colIndex;
-        if (p < 0)
-            return;
 
         if (row > 1 && isOpen(row - 1, col)) {
             int q = (_n * (rowIndex - 1)) + colIndex;
@@ -73,9 +82,11 @@ public class Percolation {
      * @return site openness
      */
     public boolean isOpen(int row, int col) {
+
+        if (row <= 0 || col <= 0)
+            throw new java.lang.IllegalArgumentException();
+
         int p = (_n * (row - 1)) + (col - 1);
-        if (p < 0)
-            return false;
         return _states[p];
     }
 
@@ -87,6 +98,11 @@ public class Percolation {
      * @return site fullness
      */
     public boolean isFull(int row, int col) {
+        if (row <= 0 || col <= 0)
+            throw new java.lang.IllegalArgumentException();
+        if(row == 1)
+            return isOpen(row, col);
+
         int p = (_n * (row - 1)) + (col - 1);
         for (int i = 0; i < _n; i++) {
             if (_unionFindAlgorithm.connected(p, i))
@@ -110,10 +126,9 @@ public class Percolation {
      * @return percolates or not
      */
     public boolean percolates() {
-        for (int i = 0; i < _n; i++) {
-            for (int j = 0; j < _n; j++)
-                if (_unionFindAlgorithm.connected((_n * _n) - j - 1, i))
-                    return true;
+        for (int i = 1; i <= _n; i++) {
+            if(isFull(_n, i))
+                return true;
         }
         return false;
     }

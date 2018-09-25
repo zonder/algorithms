@@ -1,16 +1,26 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
-/******************************************************************************
- * Compilation: javac-algs4 Percolation.java Execution: java-algs4 Percolation n
+/* *****************************************************************************
+ *  Name:    Alexander Masalov
+ *  Description:  Program that calculates percolation threshold via Monte Carlo simulation.
  *
+ *  Written:       09/23/2018
+ *  Last updated:  09/25/2018
  *
- ******************************************************************************/
+ *  % javac-algs4 PercolationStats.java
+ *  % java-algs4 PercolationStats 2 10000
+ *  mean                    = 0.668475
+ *  stddev                  = 0.11720195392910741
+ *  95% confidence interval = [0.6661778417029895,0.6707721582970105]
+ *
+ **************************************************************************** */
 
 public class PercolationStats {
 
-    private int _trials;
-    private double[] _thresholds;
+    private int _trials; // Count of trails
+    private int _n; // Size of grid
+    private double[] _thresholds; // Array of threasholds for earch trail
 
     /**
      * perform trials independent experiments on an n-by-n grid
@@ -23,6 +33,7 @@ public class PercolationStats {
         if (n <= 0 || trials <= 0)
             throw new java.lang.IllegalArgumentException();
 
+        _n = n;
         _trials = trials;
         _thresholds = new double[trials];
 
@@ -61,6 +72,9 @@ public class PercolationStats {
      * @return sample standard deviation of percolation threshold
      */
     public double stddev() {
+        if (_n == 1)
+            return Double.NaN;
+
         return StdStats.stddev(_thresholds);
     }
 
