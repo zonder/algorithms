@@ -18,9 +18,11 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
-    private int _trials; // Count of trails
-    private int _n; // Size of grid
-    private double[] _thresholds; // Array of threasholds for earch trail
+    private final double confidenceFactor = 1.96;
+
+    private final int trials; // Count of trails
+    private final int n; // Size of grid
+    private final double[] thresholds; // Array of thresholds for each trail
 
     /**
      * perform trials independent experiments on an n-by-n grid
@@ -33,9 +35,9 @@ public class PercolationStats {
         if (n <= 0 || trials <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        _n = n;
-        _trials = trials;
-        _thresholds = new double[trials];
+        this.n = n;
+        this.trials = trials;
+        thresholds = new double[trials];
 
         for (int i = 0; i < trials; i++) {
             Percolation percolation = new Percolation(n);
@@ -53,7 +55,7 @@ public class PercolationStats {
                     counter++;
                 }
             } while (!isPercolated);
-            _thresholds[i] = (double) counter / (n * n);
+            thresholds[i] = (double) counter / (n * n);
         }
     }
 
@@ -63,7 +65,7 @@ public class PercolationStats {
      * @return sample mean
      */
     public double mean() {
-        return StdStats.mean(_thresholds);
+        return StdStats.mean(thresholds);
     }
 
     /**
@@ -72,10 +74,10 @@ public class PercolationStats {
      * @return sample standard deviation of percolation threshold
      */
     public double stddev() {
-        if (_n == 1)
+        if (n == 1)
             return Double.NaN;
 
-        return StdStats.stddev(_thresholds);
+        return StdStats.stddev(thresholds);
     }
 
     /**
@@ -84,7 +86,7 @@ public class PercolationStats {
      * @return low endpoint of 95% confidence interval
      */
     public double confidenceLo() {
-        return mean() - ((1.96 * stddev()) / Math.sqrt(_trials));
+        return mean() - ((confidenceFactor * stddev()) / Math.sqrt(trials));
     }
 
     /**
@@ -93,7 +95,7 @@ public class PercolationStats {
      * @return high endpoint of 95% confidence interval
      */
     public double confidenceHi() {
-        return mean() + ((1.96 * stddev()) / Math.sqrt(_trials));
+        return mean() + ((confidenceFactor * stddev()) / Math.sqrt(trials));
     }
 
     /**

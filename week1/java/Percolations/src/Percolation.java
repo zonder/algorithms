@@ -16,11 +16,11 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
 public class Percolation {
-    private WeightedQuickUnionUF _unionFindAlgorithm; // Algorithm to perform quick union and find
+    private final WeightedQuickUnionUF unionFindAlgorithm; // Algorithm to perform quick union and find
 
-    private int _n; // Size of grid
-    private int _openCount = 0; // count of open sites
-    private boolean[] _states; // states of sites
+    private final int n; // Size of grid
+    private int openCount = 0; // count of open sites
+    private boolean[] states; // states of sites
 
     /**
      * create n-by-n grid, with all sites blocked
@@ -31,9 +31,9 @@ public class Percolation {
         if (n <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        _unionFindAlgorithm = new WeightedQuickUnionUF(n * n);
-        _n = n;
-        _states = new boolean[n * n];
+        unionFindAlgorithm = new WeightedQuickUnionUF(n * n);
+        this.n = n;
+        states = new boolean[n * n];
     }
 
     /**
@@ -49,29 +49,29 @@ public class Percolation {
         int rowIndex = row - 1;
         int colIndex = col - 1;
 
-        int p = (_n * rowIndex) + colIndex;
+        int p = (n * rowIndex) + colIndex;
 
         if (row > 1 && isOpen(row - 1, col)) {
-            int q = (_n * (rowIndex - 1)) + colIndex;
-            _unionFindAlgorithm.union(p, q);
+            int q = (n * (rowIndex - 1)) + colIndex;
+            unionFindAlgorithm.union(p, q);
         }
-        if (row < _n && isOpen(row + 1, col)) {
-            int q = (_n * (rowIndex + 1)) + colIndex;
-            _unionFindAlgorithm.union(p, q);
+        if (row < n && isOpen(row + 1, col)) {
+            int q = (n * (rowIndex + 1)) + colIndex;
+            unionFindAlgorithm.union(p, q);
         }
 
         if (col > 1 && isOpen(row, col - 1)) {
-            int q = (_n * rowIndex) + (colIndex - 1);
-            _unionFindAlgorithm.union(p, q);
+            int q = (n * rowIndex) + (colIndex - 1);
+            unionFindAlgorithm.union(p, q);
         }
 
-        if (col < _n && isOpen(row, col + 1)) {
-            int q = (_n * rowIndex) + (colIndex + 1);
-            _unionFindAlgorithm.union(p, q);
+        if (col < n && isOpen(row, col + 1)) {
+            int q = (n * rowIndex) + (colIndex + 1);
+            unionFindAlgorithm.union(p, q);
         }
 
-        _states[p] = true;
-        _openCount++;
+        states[p] = true;
+        openCount++;
     }
 
     /**
@@ -86,8 +86,8 @@ public class Percolation {
         if (row <= 0 || col <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        int p = (_n * (row - 1)) + (col - 1);
-        return _states[p];
+        int p = (n * (row - 1)) + (col - 1);
+        return states[p];
     }
 
     /**
@@ -100,12 +100,12 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         if (row <= 0 || col <= 0)
             throw new java.lang.IllegalArgumentException();
-        if(row == 1)
+        if (row == 1)
             return isOpen(row, col);
 
-        int p = (_n * (row - 1)) + (col - 1);
-        for (int i = 0; i < _n; i++) {
-            if (_unionFindAlgorithm.connected(p, i))
+        int p = (n * (row - 1)) + (col - 1);
+        for (int i = 0; i < n; i++) {
+            if (unionFindAlgorithm.connected(p, i))
                 return true;
         }
         return false;
@@ -117,7 +117,7 @@ public class Percolation {
      * @return number of open sites
      */
     public int numberOfOpenSites() {
-        return _openCount;
+        return openCount;
     }
 
     /**
@@ -126,8 +126,8 @@ public class Percolation {
      * @return percolates or not
      */
     public boolean percolates() {
-        for (int i = 1; i <= _n; i++) {
-            if(isFull(_n, i))
+        for (int i = 1; i <= n; i++) {
+            if (isFull(n, i))
                 return true;
         }
         return false;
