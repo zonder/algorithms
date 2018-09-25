@@ -31,9 +31,13 @@ public class Percolation {
         if (n <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        unionFindAlgorithm = new WeightedQuickUnionUF(n * n);
+        unionFindAlgorithm = new WeightedQuickUnionUF(n * n + 2);
         this.n = n;
         states = new boolean[n * n];
+        for(int i=0;i<n;i++) {
+            unionFindAlgorithm.union((n*n + 1), n*n - i - 1);
+            unionFindAlgorithm.union(n*n, i);
+        }
     }
 
     /**
@@ -49,8 +53,7 @@ public class Percolation {
         int rowIndex = row - 1;
         int colIndex = col - 1;
 
-        int p = (n * rowIndex) + colIndex;
-
+        int p = xyTo1D(row, col);
         if (row > 1 && isOpen(row - 1, col)) {
             int q = (n * (rowIndex - 1)) + colIndex;
             unionFindAlgorithm.union(p, q);
@@ -60,12 +63,12 @@ public class Percolation {
             unionFindAlgorithm.union(p, q);
         }
 
-        if (col > 1 && isOpen(row, col - 1)) {
+        if (col > 1 && row != 1 && isOpen(row, col - 1)) {
             int q = (n * rowIndex) + (colIndex - 1);
             unionFindAlgorithm.union(p, q);
         }
 
-        if (col < n && isOpen(row, col + 1)) {
+        if (col < n && row != 1 && isOpen(row, col + 1)) {
             int q = (n * rowIndex) + (colIndex + 1);
             unionFindAlgorithm.union(p, q);
         }
@@ -86,7 +89,7 @@ public class Percolation {
         if (row <= 0 || col <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        int p = (n * (row - 1)) + (col - 1);
+        int p = xyTo1D(row, col);
         return states[p];
     }
 
@@ -100,15 +103,9 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         if (row <= 0 || col <= 0)
             throw new java.lang.IllegalArgumentException();
-        if (row == 1)
-            return isOpen(row, col);
 
-        int p = (n * (row - 1)) + (col - 1);
-        for (int i = 0; i < n; i++) {
-            if (unionFindAlgorithm.connected(p, i))
-                return true;
-        }
-        return false;
+        int p = xyTo1D(row, col);
+        return isOpen(row, col) && unionFindAlgorithm.connected(n*n, p);
     }
 
     /**
@@ -126,15 +123,11 @@ public class Percolation {
      * @return percolates or not
      */
     public boolean percolates() {
-        for (int i = 1; i <= n; i++) {
-            if (isFull(n, i))
-                return true;
-        }
-        return false;
+        return unionFindAlgorithm.connected(n*n, n*n+1);
     }
 
     public static void main(String[] args) {
-        int n = 20;
+        int n = 3;
         Percolation percolation = new Percolation(n);
         boolean isPercolated = false;
         int counter = 0;
@@ -152,5 +145,8 @@ public class Percolation {
 
         } while (!isPercolated);
         System.out.println(counter + "/" + n * n);
+    }
+    private int xyTo1D(int row, int col){
+        return (n * (row - 1)) + (col - 1);
     }
 }
