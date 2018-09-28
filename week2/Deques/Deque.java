@@ -11,110 +11,190 @@
  *
  **************************************************************************** */
 
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
-  /**
-   * Constructs an empty deque
-   */
-  public Deque() {
 
-  }
+    private int count = 0;
+    private Node<Item> first;
+    private Node<Item> last;
 
-  /**
-   * Checks is the deque empty?
-   *
-   * @return if the deque is empty?
-   */
-  public boolean isEmpty() {
-    return false;
-  }
+    /**
+     * Constructs an empty deque
+     */
+    public Deque() {
 
-  /**
-   * Returns the number of items on the deque
-   *
-   * @return he number of items on the deque
-   */
-  public int size() {
+    }
 
-  }
+    /**
+     * Checks is the deque empty?
+     *
+     * @return if the deque is empty?
+     */
+    public boolean isEmpty() {
+        return count == 0;
+    }
 
-  /**
-   * Adds the item to the front
-   *
-   * @param item to add at the top
-   */
-  public void addFirst(Item item) {
-    if (item == null)
-      throw new java.lang.IllegalArgumentException();
-  }
+    /**
+     * Returns the number of items on the deque
+     *
+     * @return he number of items on the deque
+     */
+    public int size() {
+        return count;
+    }
 
-  /**
-   * Adds the item to the end
-   *
-   * @param item to add at the end
-   */
-  public void addLast(Item item) {
-    if (item == null)
-      throw new java.lang.IllegalArgumentException();
+    /**
+     * Adds the item to the front
+     *
+     * @param item to add at the top
+     */
+    public void addFirst(Item item) {
+        if (item == null)
+            throw new java.lang.IllegalArgumentException();
 
-  }
+        Node<Item> node = new Node<>();
+        node.value = item;
+        node.next = first;
+        node.prev = null;
 
-  /**
-   * Removes and return the item from the front
-   *
-   * @return removed item
-   */
-  public Item removeFirst() {
-    if (isEmpty())
-      throw new java.util.NoSuchElementException();
+        if (first != null)
+            first.prev = node;
 
-    return null;
-  }
+        first = node;
+        if (last == null)
+            last = node;
 
-  /**
-   * Removes and return the item from the end
-   *
-   * @return removed item
-   */
-  public Item removeLast() {
-    if (isEmpty())
-      throw new java.util.NoSuchElementException();
+        count++;
+    }
 
-    return null;
-  }
+    /**
+     * Adds the item to the end
+     *
+     * @param item to add at the end
+     */
+    public void addLast(Item item) {
+        if (item == null)
+            throw new java.lang.IllegalArgumentException();
 
-  /**
-   * Returns an iterator over items in order from front to end
-   *
-   * @return iterator
-   */
-  public Iterator<Item> iterator() {
-    return new Iterator<Item>() {
-      @Override
-      public boolean hasNext() {
-        return false;
-      }
+        Node<Item> node = new Node<>();
+        node.value = item;
+        node.next = null;
 
-      @Override
-      public void remove() {
-        throw new java.lang.UnsupportedOperationException();
-      }
+        if (last != null)
+            last.next = node;
 
-      @Override
-      public Item next() {
-        // throw new java.util.NoSuchElementException();
-        return null;
-      }
-    };
-  }
+        node.prev = last;
 
-  /**
-   * unit testing (optional)
-   *
-   * @param args external arguments
-   */
-  public static void main(String[] args) {
-    System.out.println("Deque");
-  }
+        last = node;
+        if (first == null)
+            first = node;
+
+        count++;
+    }
+
+    /**
+     * Removes and return the item from the front
+     *
+     * @return removed item
+     */
+    public Item removeFirst() {
+        if (isEmpty())
+            throw new java.util.NoSuchElementException();
+
+        Item value = first.value;
+        if (first.next == null) {
+            first = null;
+            last = null;
+            count = 0;
+        } else {
+            first = first.next;
+            first.prev = null;
+            count--;
+        }
+        return value;
+
+    }
+
+    /**
+     * Removes and return the item from the end
+     *
+     * @return removed item
+     */
+    public Item removeLast() {
+        if (isEmpty())
+            throw new java.util.NoSuchElementException();
+
+        Item value = last.value;
+        if (last.prev == null) {
+            first = null;
+            last = null;
+            count = 0;
+        } else {
+            last = last.prev;
+            last.next = null;
+            count--;
+        }
+        return value;
+    }
+
+    /**
+     * Returns an iterator over items in order from front to end
+     *
+     * @return iterator
+     */
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            private Node<Item> current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public void remove() {
+                throw new java.lang.UnsupportedOperationException();
+            }
+
+            @Override
+            public Item next() {
+                if (!hasNext())
+                    throw new java.util.NoSuchElementException();
+
+                Item value = current.value;
+                current = current.next;
+                return value;
+            }
+        };
+    }
+
+    /**
+     * unit testing (optional)
+     *
+     * @param args external arguments
+     */
+    public static void main(String[] args) {
+        Deque<String> deque = new Deque<>();
+        StdOut.println(deque.isEmpty());
+        deque.addFirst("to");
+        deque.addFirst("be");
+        deque.addFirst("q");
+        deque.addFirst("qq");
+        deque.addFirst("qqq");
+        /*deque.addLast("or");
+        deque.addLast("not");*/
+        StdOut.println(deque.isEmpty());
+        StdOut.println(deque.size());
+        StdOut.println(deque.removeLast());
+        StdOut.println(deque.removeLast());
+        StdOut.println(deque.isEmpty());
+        StdOut.println("-------------");
+
+        for (String s : deque) {
+            StdOut.print(s + " ");
+        }
+    }
 }
