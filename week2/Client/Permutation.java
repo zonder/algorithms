@@ -14,6 +14,8 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.NoSuchElementException;
+
 
 public class Permutation {
 
@@ -26,13 +28,15 @@ public class Permutation {
 
         int k = Integer.parseInt(args[0]);
         RandomizedQueue<String> randomQueue = new RandomizedQueue<>();
-        while (StdIn.hasNextLine()) {
-            String input = StdIn.readString();
-            if (!input.isEmpty()) {
+        String input = StdIn.readString();
+        try {
+            do {
                 randomQueue.enqueue(input);
-            }
-        }
+                input = StdIn.readString();
+            } while (!input.isEmpty());
+        } catch (NoSuchElementException e) {
 
+        }
 
         for (String s : randomQueue) {
             if (k-- == 0)
