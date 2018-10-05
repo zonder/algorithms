@@ -18,7 +18,6 @@ import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private static final int defaultCapacity = 10;
     private static final int capacityShrinkFactor = 4;
 
     private Item[] arr;
@@ -27,7 +26,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int tPointer;
 
     public RandomizedQueue() {
-        arr = (Item[]) new Object[defaultCapacity];
+        arr = (Item[]) new Object[10];
         hPointer = tPointer = getCapacity() / 2;
     }
 
