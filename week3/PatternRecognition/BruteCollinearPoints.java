@@ -34,8 +34,7 @@ public class BruteCollinearPoints {
     }
 
     Point[] pt = points.clone();
-
-
+    
     Arrays.sort(pt);
 
     allSegments = new ArrayList<>();

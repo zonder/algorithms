@@ -32,13 +32,13 @@ public class FastCollinearPoints {
 
     allSegments = new ArrayList<>();
 
-    if (points.length < 3)
-      return;
-
     for (int x = 0; x < points.length; x++) {
       if (points[x] == null)
         throw new java.lang.IllegalArgumentException("Null points were passed");
     }
+    if (points.length < 3)
+      return;
+
     Point[] original = points.clone();
 
     Point[] pt = original.clone();
