@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public class BruteCollinearPoints {
 
-    private ArrayList<LineSegment> allSegments;
+    private final ArrayList<LineSegment> allSegments;
 
     /**
      * Finds all line segments containing 4 points
