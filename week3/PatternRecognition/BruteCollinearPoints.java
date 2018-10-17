@@ -25,21 +25,26 @@ public class BruteCollinearPoints {
    */
   public BruteCollinearPoints(Point[] points) {
 
-    Arrays.sort(points);
-
     if (points == null)
       throw new java.lang.IllegalArgumentException("Null points were passed");
 
+    Arrays.sort(points);
+
     allSegments = new ArrayList<>();
-    ArrayList<Double> slopes = new ArrayList<>();
+    boolean[] used = new boolean[points.length];
 
     for (int i = 0; i < points.length; i++) {
       if (points[i] == null)
         throw new java.lang.IllegalArgumentException("Null point exist");
 
+      if (used[i])
+        continue;
+
       Point p = points[i];
       for (int n = i + 1; n < points.length; n++) {
 
+        if (used[n])
+          continue;
         boolean isFound = false;
 
         if (p.compareTo(points[n]) == 0)
@@ -49,6 +54,9 @@ public class BruteCollinearPoints {
 
         for (int j = n + 1; j < points.length; j++) {
 
+          if (used[j])
+            continue;
+
           if (points[n].compareTo(points[j]) == 0)
             throw new java.lang.IllegalArgumentException("Duplicated point");
           double slope2 = p.slopeTo(points[j]);
@@ -56,6 +64,9 @@ public class BruteCollinearPoints {
             continue;
 
           for (int z = points.length - 1; z > j; z--) {
+
+            if (used[z])
+              continue;
 
             if (points[j].compareTo(points[z]) == 0)
               throw new java.lang.IllegalArgumentException("Duplicated point");
@@ -65,16 +76,11 @@ public class BruteCollinearPoints {
 
             double slope3 = p.slopeTo(points[z]);
             if (slope1 == slope2 && slope2 == slope3) {
-              boolean b = false;
-              /*for (int a = 0; a < slopes.size(); a++) {
-                if (slopes.get(a) == slope3)
-                // b = true;
-              }
-              if (b)
-                break;*/
+              used[i] = true;
+              used[z] = true;
 
               allSegments.add(new LineSegment(points[i], points[z]));
-              slopes.add(slope3);
+
               isFound = true;
               break;
             }
