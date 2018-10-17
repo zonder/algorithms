@@ -15,12 +15,41 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class FastCollinearPoints {
 
-    /**
-     * unit testing (optional)
-     *
-     * @param args external arguments
-     */
-    public static void main(String[] args) {
-        StdOut.println("FastCollinearPoints");
-    }
+  /**
+   * Finds all line segments containing 4 points
+   *
+   * @param points all points
+   */
+  public FastCollinearPoints(Point[] points) {
+    if (points == null)
+      throw new java.lang.IllegalArgumentException("Null points were passed");
+  }
+
+  /**
+   * Returns the number of line segments
+   *
+   * @return the number of line segments
+   */
+  public int numberOfSegments() {
+    return 0;
+  }
+
+  /**
+   * Returns the line segments
+   *
+   * @return the line segments
+   */
+  public LineSegment[] segments() {
+    return null;
+  }
+
+
+  /**
+   * unit testing (optional)
+   *
+   * @param args external arguments
+   */
+  public static void main(String[] args) {
+    StdOut.println("FastCollinearPoints");
+  }
 }
